@@ -1,11 +1,11 @@
-import "../assets/style.css"
+import "../assets/style.css";
 export default function Start() {
-    return (
-      <div>
-        <div class="container">
-            <div class="item"></div>
-        </div>
+  return (
+    <div>
+      <div className="container">
+        <div className="item"></div>
+        <div>This is Start</div>
       </div>
-    );
-  }
-  
+    </div>
+  );
+}

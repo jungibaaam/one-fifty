@@ -5,14 +5,16 @@ export default function Home() {
     <div>
       <h1>1 to 50</h1>
       <button>
-        <Link to="/about">1 to 50?</Link>
+        <Link to="/start">Start</Link>
       </button>
       <br />
-      <button>시작</button>
+      <button>
+        <Link to="/score">Score</Link>
+      </button>
       <br />
-      <button>점수</button>
-      <br />
-      <button>게시판</button>
+      <button>
+        <Link to="/community">Community</Link>
+      </button>
     </div>
   );
 }
