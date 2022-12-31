@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { act } from "react-dom/test-utils";
 
 export default function Timer() {
   const [active, setActive] = useState(false);
@@ -23,7 +22,7 @@ export default function Timer() {
   const [displayTime, setDisplayTime] = useState(
     new Date() - startDate + pauseTime
   );
-  
+
   const tick = useRef(() => {
     if (activeRef.current) {
       setDisplayTime(new Date() - startDateRef.current + pauseTimeRef.current);
@@ -63,4 +62,21 @@ export default function Timer() {
       <button onClick={handleResetClick.current}>reset</button>
     </div>
   );
+}
+
+function getTimesFromMillis(source) {
+  const timeUnits = [
+    ["millis", 1000],
+    ["seconds", 60],
+    ["minutes", 60],
+    ["hours", 24],
+  ];
+  return timeUnits.reduce((acc, [unitKey, unitValue]) => {
+    if (unitValue) {
+      const value = source % unitValue;
+      source = (source - value) / unitValue;
+      return object.assign({}, acc, { [unitKey]: value });
+    }
+    return Object.assign({}, acc, { [unitKey]: source });
+  }, {});
 }

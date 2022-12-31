@@ -1,5 +1,5 @@
 // import "../assets/style.css";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Board from "../components/Board";
 import Timer from "../components/Timer";
 let arr = [];
@@ -8,15 +8,45 @@ for (let i = 1; i < 26; i++) {
 }
 
 export default function Start() {
+  // 1 to 50 로직에 필요한 states
   const [nums, setNums] = useState(arr);
   const [isPlay, setIsPlay] = useState(false);
   const [goal, setGoal] = useState(1);
   const [count, setCount] = useState(0);
 
+  // timer에 필요한 states
+  const activeRef = useRef(isPlay);
+  useEffect(() => {
+    activeRef.current = isPlay;
+  }, [isPlay]);
+  const [startDate, setStartDate] = useState(new Date());
+  const startDateRef = useRef(startDate);
+  useEffect(() => {
+    startDateRef.current = startDate;
+  }, [startDate]);
+  const [recordTime, setRecordTime] = useState(0);
+  const recordTimeRef = useRef(recordTime);
+  useEffect(() => {
+    recordTimeRef.current = recordTime;
+  }, [recordTime]);
+  const [displayTime, setDisplayTime] = useState(
+    new Date() - startDate + recordTime
+  );
+  const tick = useRef(() => {
+    if (activeRef.current) {
+      setDisplayTime(new Date() - startDateRef.current + recordTimeRef.current);
+      requestAnimationFrame(tick.current);
+    }
+  });
+  useEffect(() => {
+    requestAnimationFrame(tick.current);
+  }, [isPlay]);
+
+  // 1 to 50 게임 로직
   const onClick = (num) => {
     // 클릭 num과 목표 goal이 같을 경우
     if (num === goal) {
-        // 클리어 하는 경우
+      // 클리어 하는 경우
       if (num === 50) {
         console.log("game finish!");
         setIsPlay(false);
@@ -38,6 +68,7 @@ export default function Start() {
   };
 
   const gameStart = () => {
+    setStartDate(new Date());
     setNums(shuffle(arr));
     setGoal(1);
     setIsPlay(true);
@@ -49,9 +80,15 @@ export default function Start() {
 
   return (
     <div>
+      <div>{displayTime}</div>
       <Board value={nums} onClick={onClick} />
-      <button onClick={gameStart}>play</button>
-      <Timer />
+      <div>
+        {isPlay ? (
+          `Playing!`
+        ) : (
+          <button onClick={gameStart}>play</button>
+        )}
+      </div>
     </div>
   );
 }
