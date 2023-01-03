@@ -1,5 +1,5 @@
 // import "../assets/style.css";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Board from "../components/Board";
 import Timer from "../components/Timer";
 let arr = [];
@@ -12,35 +12,39 @@ export default function Start() {
   const [nums, setNums] = useState(arr);
   const [isPlay, setIsPlay] = useState(false);
   const [goal, setGoal] = useState(1);
-  const [count, setCount] = useState(0);
 
-  // timer에 필요한 states
-  const activeRef = useRef(isPlay);
-  useEffect(() => {
-    activeRef.current = isPlay;
-  }, [isPlay]);
-  const [startDate, setStartDate] = useState(new Date());
-  const startDateRef = useRef(startDate);
-  useEffect(() => {
-    startDateRef.current = startDate;
-  }, [startDate]);
-  const [recordTime, setRecordTime] = useState(0);
-  const recordTimeRef = useRef(recordTime);
-  useEffect(() => {
-    recordTimeRef.current = recordTime;
-  }, [recordTime]);
-  const [displayTime, setDisplayTime] = useState(
-    new Date() - startDate + recordTime
-  );
-  const tick = useRef(() => {
-    if (activeRef.current) {
-      setDisplayTime(new Date() - startDateRef.current + recordTimeRef.current);
-      requestAnimationFrame(tick.current);
-    }
-  });
-  useEffect(() => {
-    requestAnimationFrame(tick.current);
-  }, [isPlay]);
+  // // timer에 필요한 states
+  // const activeRef = useRef(isPlay);
+  // useEffect(() => {
+  //   activeRef.current = isPlay;
+  // }, [isPlay]);
+
+  // const [startDate, setStartDate] = useState(new Date());
+  // const startDateRef = useRef(startDate);
+  // useEffect(() => {
+  //   startDateRef.current = startDate;
+  // }, [startDate]);
+
+  // const [pauseTime, setPauseTime] = useState(0);
+  // const pauseTimeRef = useRef(pauseTime);
+  // useEffect(() => {
+  //   pauseTimeRef.current = pauseTime;
+  // }, [pauseTime]);
+
+  // const [recordTime, setRecordTime] = useState([]);
+  // const [displayTime, setDisplayTime] = useState(
+  //   new Date() - startDate + pauseTime
+  // );
+
+  // const tick = useRef(() => {
+  //   if (activeRef.current) {
+  //     setDisplayTime(new Date() - startDateRef.current + pauseTimeRef.current);
+  //     requestAnimationFrame(tick.current);
+  //   }
+  // });
+  // useEffect(() => {
+  //   requestAnimationFrame(tick.current);
+  // }, [isPlay]);
 
   // 1 to 50 게임 로직
   const onClick = (num) => {
@@ -49,7 +53,7 @@ export default function Start() {
       // 클리어 하는 경우
       if (num === 50) {
         console.log("game finish!");
-        setIsPlay(false);
+        gameFinish();
       }
       // 클릭한 숫자의 인덱스 저장 함수
       const index = nums.indexOf(num);
@@ -67,8 +71,14 @@ export default function Start() {
     }
   };
 
+  // const recordTimeOn = useCallback(() => {
+  //   const newRecordTime = Array.from(recordTime);
+  //   newRecordTime.push(new Date() - startDate + pauseTime);
+  //   setRecordTime(newRecordTime);
+  // })
+
   const gameStart = () => {
-    setStartDate(new Date());
+    // setStartDate(new Date());
     setNums(shuffle(arr));
     setGoal(1);
     setIsPlay(true);
@@ -80,14 +90,15 @@ export default function Start() {
 
   return (
     <div>
-      <div>{displayTime}</div>
+      {/* <div>{displayTime}</div> */}
       <Board value={nums} onClick={onClick} />
       <div>
         {isPlay ? (
-          `Playing!`
+          <Timer />
         ) : (
           <button onClick={gameStart}>play</button>
         )}
+        <button onClick={gameFinish}>testFinishBtn</button>
       </div>
     </div>
   );

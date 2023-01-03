@@ -4,7 +4,7 @@ import Home from "./routes/Home";
 import Start from "./routes/Start";
 import Score from "./routes/Score";
 import Community from "./routes/Commuinity";
-import Timer from "./components/Timer";
+import Timer from "./components/Timer2";
 function App() {
   return (
     <Routes>
